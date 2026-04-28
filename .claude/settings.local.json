@@ -1,0 +1,85 @@
+{
+  "hooks": {
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .agent-logs/claude_hook_session_end.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Read",
+
+      "Edit(memory-bank/**)",
+      "Edit(.claude/settings.json)",
+      "Edit(.claude/settings.local.json)",
+      "Edit(.gitignore)",
+      "Edit(README.md)",
+      "Edit(CLAUDE.md)",
+
+      "Bash(git status *)",
+      "Bash(git status)",
+      "Bash(git log *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git diff *)",
+      "Bash(git branch *)",
+      "Bash(git checkout *)",
+      "Bash(git switch *)",
+      "Bash(git merge *)",
+      "Bash(git stash *)",
+      "Bash(git push *)",
+      "Bash(git pull *)",
+      "Bash(git fetch *)",
+      "Bash(git worktree *)",
+      "Bash(git rev-parse *)",
+      "Bash(git -C *)",
+      "Bash(git show *)",
+      "Bash(git tag *)",
+
+      "Bash(ls *)",
+      "Bash(ls)",
+      "Bash(mkdir -p *)",
+      "Bash(find *)",
+      "Bash(grep *)",
+      "Bash(echo *)",
+      "Bash(cat *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(tee *)",
+      "Bash(wc *)",
+      "Bash(sort *)",
+      "Bash(diff *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(rm /tmp/*)",
+      "Bash(rm -r /tmp/*)",
+      "Bash(rm -rf /tmp/*)",
+      "Bash(pwd)",
+      "Bash(python3 *)",
+      "Bash(bash tests/*)",
+      "Bash(bash .agent-logs/*)",
+      "Bash(bash -c *)",
+      "Bash(bash -n *)",
+      "Bash(cd *)",
+      "Bash(chmod +x *)",
+
+      "WebSearch"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(sudo *)",
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Edit(.env)",
+      "Edit(.env.*)",
+      "Edit(~/.ssh/**)"
+    ]
+  }
+}

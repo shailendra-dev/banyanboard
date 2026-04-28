@@ -1,0 +1,7 @@
+# Session logs (generated, may contain sensitive info)
+.agent-logs/sessions/
+.agent-logs/claude/
+
+# Claude Code working dirs
+.claude-logs/
+.claude-worktrees/
