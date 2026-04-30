@@ -180,3 +180,13 @@ export function getLogger(): pino.Logger {
 export function runWithContext<T>(ctx: RequestContext, fn: () => T): T {
   return getInstance().runWithContext(ctx, fn);
 }
+
+/**
+ * Returns the traceId from the active OTel span, or an empty string when no
+ * span is active. Use this to include traceId in HTTP response bodies (e.g.
+ * the error envelope) without importing @opentelemetry/api outside src/logger/.
+ */
+export function getTraceId(): string {
+  const span = trace.getActiveSpan();
+  return span?.spanContext().traceId ?? '';
+}

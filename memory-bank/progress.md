@@ -68,3 +68,38 @@
 - OTel telemetry reads `OTEL_SDK_DISABLED` directly from `process.env` (intentional: must initialize before config validation).
 
 **Phase 2 Archive**: `memory-bank/archive/archive-TASK-001-phase2.md`
+
+---
+
+## 2026-04-30 — Phase 3: HTTP Layer & Health Endpoint — COMPLETE (TASK-001)
+
+### What Was Built
+- `src/errors/AppError.ts`: `AppError` base class with `statusCode`, `code`, `expose`, `details`, `cause`; concrete subclasses `BadRequestError`, `UnauthorizedError`, `ForbiddenError`, `NotFoundError`, `ConflictError`, `PayloadTooLargeError`, `InternalError`; `Object.setPrototypeOf` restores prototype chain for reliable `instanceof`
+- `src/db/index.ts`: `pg.Pool` with `max:10 / idleTimeoutMillis:30s / connectionTimeoutMillis:5s`; exports `query()`, `ping()`, `shutdown()`, `getPool()`; pool error events logged via `logger` singleton
+- `src/routes/health.ts`: `GET /health` → `{ status, service, version, db }`; 200 when `ping()` resolves true, 503 when false; uses `.then().catch(next)` pattern for Express 4 async safety
+- `src/middleware/errorHandler.ts`: 4-arg Express error handler; `instanceof AppError` distinguishes operational from programmer errors; operational errors use `err.statusCode` + `err.expose` guard on message; programmer errors → generic 500 with `INTERNAL_ERROR`; `traceId` from `getTraceId()` helper (kept inside `src/logger/`)
+- `src/middleware/notFoundHandler.ts`: converts unmatched routes to `NotFoundError('Route not found')`
+- `src/app.ts`: `createApp()` factory; middleware order: `traceContextMiddleware → express.json({ limit: '100kb' }) → requestLoggerMiddleware → healthRouter → notFoundHandler → errorHandler`
+- `src/server.ts`: process entrypoint; lazy config/logger after telemetry init; graceful shutdown drains HTTP server → DB pool → telemetry SDK (in sequence, 10s force-exit timeout)
+- `src/logger/index.ts` (updated): added `getTraceId()` helper — returns active OTel span traceId or empty string; keeps `@opentelemetry/api` usage inside `src/logger/` per ownership rule
+- `src/logger/http.ts` (updated): request serializer now includes `headers` field so pino's redact paths censor `Authorization`/`Cookie` values
+- `eslint.config.js` (updated): `@typescript-eslint/no-unused-vars` with `argsIgnorePattern: '^_'` for both src/ and tests/; disabled `no-unsafe-assignment` + `no-unsafe-member-access` in tests/ (supertest `res.body` is `any`)
+- `vitest.config.ts` (updated): added `env: { DATABASE_URL, NODE_ENV: 'test' }` so lazy config Proxy can initialize during integration tests
+
+### Test Summary
+- Tests: 13/13 passing (4 config + 4 logger + 3 health + 2 middleware)
+- Code Review: APPROVED (0 blocking, 4 recommended — all applied)
+- Lint: PASS
+- Build: PASS
+
+### Files Created
+- `src/errors/AppError.ts`, `src/db/index.ts`, `src/routes/health.ts`
+- `src/middleware/errorHandler.ts`, `src/middleware/notFoundHandler.ts`
+- `src/app.ts`, `src/server.ts`
+- `tests/integration/health.test.ts`, `tests/integration/middleware.test.ts`
+
+### Key Decisions
+- `getTraceId()` helper exported from `src/logger/index.ts` keeps the `@opentelemetry/api` import boundary inside the logger module, consistent with `systemPatterns.md` ownership rules
+- `.then().catch(next)` pattern used in health route for Express 4 async handler safety (Express 5 will allow `async` handlers directly)
+- `shutdownTelemetry()` called after `pool.end()` in graceful shutdown to drain in-flight spans before exit
+- `Object.setPrototypeOf(this, new.target.prototype)` in AppError constructor is required — without it, `instanceof AppError` fails after TypeScript transpilation

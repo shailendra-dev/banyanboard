@@ -25,6 +25,17 @@ export default [
       ...tsPlugin.configs['recommended-type-checked'].rules,
       // Blocking: no console calls in production source code (AC-NFR-1)
       'no-console': 'error',
+      // Allow _-prefixed parameters that must be declared but are intentionally unused
+      // (e.g. Express 4-arg error handlers require the next param even when not called).
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          args: 'after-used',
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
       // Prevent direct imports of infrastructure modules outside their owners
       'no-restricted-imports': [
         'error',
@@ -127,6 +138,18 @@ export default [
     rules: {
       ...tsPlugin.configs['recommended-type-checked'].rules,
       'no-console': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          args: 'after-used',
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
+      // supertest res.body is typed as `any`; these rules produce false positives in tests.
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
     },
   },
   // Prettier must come last to disable conflicting formatting rules

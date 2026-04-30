@@ -19,11 +19,12 @@ export const requestLoggerMiddleware = pinoHttp<IncomingMessage, ServerResponse>
     responseTime: 'durationMs',
   },
 
-  // Suppress verbose req/res objects — only keep the flat fields we care about.
+  // Include headers so pino's redact paths can censor Authorization/Cookie values.
   serializers: {
     req: (req: IncomingMessage) => ({
       method: req.method,
       url: req.url,
+      headers: req.headers,
     }),
     res: (res: ServerResponse) => ({
       statusCode: res.statusCode,

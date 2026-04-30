@@ -96,10 +96,10 @@ banyanboard/
     ├── config/
     │   └── index.ts            # zod schema + loadConfig() + frozen `config` singleton
     ├── logger/
-    │   └── index.ts            # pino instance + getLogger() (ALS-aware) + runWithContext()
+    │   ├── index.ts            # pino instance + getLogger() (ALS-aware) + runWithContext() + getTraceId()
+    │   └── http.ts             # pino-http requestLoggerMiddleware (owned by logger/ per ESLint rule)
     ├── errors/
-    │   ├── AppError.ts         # base class
-    │   └── index.ts            # BadRequestError, UnauthorizedError, NotFoundError, ConflictError, …
+    │   └── AppError.ts         # AppError base + all concrete subclasses (BadRequest, NotFound, etc.)
     ├── middleware/
     │   ├── traceContext.ts     # enter ALS scope per request
     │   ├── requestLogger.ts    # pino-http configured against the singleton logger
