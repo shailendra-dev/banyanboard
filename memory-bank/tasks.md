@@ -2,4 +2,4 @@
 
 | ID | Task | Phase | Status | Roadmap |
 |----|------|-------|--------|---------|
-| TASK-001 | Express API with TypeScript | PLAN | PLANNING | FEAT-001 |
+| TASK-001 | Express API with TypeScript | BUILD | Phase 2/4 ✓ | FEAT-001 |

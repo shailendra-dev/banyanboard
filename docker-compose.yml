@@ -1,0 +1,51 @@
+services:
+  api:
+    build: .
+    ports:
+      - "${PORT:-3000}:${PORT:-3000}"
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      POSTGRES_USER: ${POSTGRES_USER:-banyan}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-banyan}
+      POSTGRES_DB: ${POSTGRES_DB:-banyanboard}
+      DATABASE_URL: postgres://${POSTGRES_USER:-banyan}:${POSTGRES_PASSWORD:-banyan}@db:5432/${POSTGRES_DB:-banyanboard}
+      LOG_LEVEL: debug
+      LOG_FORMAT: text
+      LOG_OUTPUT: stdout
+      SERVICE_NAME: banyanboard-api
+      SERVICE_VERSION: 0.1.0
+      OTEL_TRACES_SAMPLER_ARG: 1.0
+      OTEL_SDK_DISABLED: "true"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "require('node:http').get('http://localhost:3000/health', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-banyan}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-banyan}
+      POSTGRES_DB: ${POSTGRES_DB:-banyanboard}
+    volumes:
+      - banyan-pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-banyan} -d ${POSTGRES_DB:-banyanboard}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  banyan-pg-data:

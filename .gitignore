@@ -5,3 +5,15 @@
 # Claude Code working dirs
 .claude-logs/
 .claude-worktrees/
+
+# Node
+node_modules/
+dist/
+
+# Environment files — never commit secrets
+.env
+
+# Test output
+coverage/
+*.log
+.claude-logs/
