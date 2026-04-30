@@ -71,6 +71,26 @@
 
 ---
 
+## 2026-04-30 — Phase 4: Tests & Verification — COMPLETE (TASK-001)
+
+### What Was Built
+- `tests/integration/middleware.test.ts` (extended from Phase 3): added 3 tests:
+  1. **Password redaction** — `createLogger` with memStream + `testLogger.info({ body: { password: 'secret123' } })` confirms `*.password` redact path censors the value to `[REDACTED]` (AC-NFR-3)
+  2. **Traceparent propagation** — custom `otelSimMiddleware` extracts the W3C `traceparent` header and enters the OTel span context via `otelContext.with()`; route handler uses `getTestLogger().info()` which reads the active span; asserts parsed log `traceId` matches header value (AC-HAPPY-3)
+  3. **No-console assertion** — `spawnSync('grep', ['-r', '--include=*.ts', 'console\\.', 'src/'])` with `cwd: projectRoot`; `stderr` checked first for path-resolution failures; `status === 1` (grep no-match exit) confirms zero `console.*` calls in `src/` (AC-NFR-1)
+
+### Test Summary
+- Tests: 16/16 passing (4 config + 4 logger + 5 middleware + 3 health)
+- Code Review: APPROVED (0 blocking, 2 recommended — both applied: `cwd` option on spawnSync; stderr diagnostic check)
+- Lint: PASS
+- Build: PASS
+
+### Notes
+- All Phase 4 tests passed on first run — the verification confirmed the platform implementation from Phases 1-3 is correct
+- `otelContext.with(ctx, () => next())` reliably propagates through Express 4's router because `AsyncLocalStorageContextManager` (registered in `tests/setup/otel.ts`) propagates ALS context through all async continuations
+
+---
+
 ## 2026-04-30 — Phase 3: HTTP Layer & Health Endpoint — COMPLETE (TASK-001)
 
 ### What Was Built
