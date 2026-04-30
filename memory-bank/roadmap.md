@@ -2,7 +2,7 @@
 
 ## Summary
 
-- **Total Features**: 7
+- **Total Features**: 7 (1 complete, 6 planned)
 - **Total Versions**: 4 (3 planning + `next` backlog)
 - **Active Version**: None
 - **Released Versions**: 0
@@ -56,7 +56,7 @@
 ### FEAT-001: Express API with TypeScript
 
 - **Version**: v0.1.0
-- **Status**: in_progress
+- **Status**: complete
 - **Priority**: high
 - **Complexity**: Level 3
 - **Description**: Foundation milestone. Set up the Express + TypeScript backend with the clean-architecture folder layout (favoring simplicity over clever abstractions per project constraints). Includes PostgreSQL connection, Docker Compose dev environment, base middleware (request logging, error handling, JSON parsing), structured logging with traceId per the Observability Standards in CLAUDE.md, and a health-check endpoint. No domain features yet — this is purely the platform.

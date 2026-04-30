@@ -91,6 +91,17 @@
 
 ---
 
+---
+
+## Task Archive: TASK-001
+
+**Task**: Express API with TypeScript (FEAT-001 / v0.1.0 Foundation)
+**Status**: ARCHIVED
+**Date**: 2026-04-30
+**Archive**: `memory-bank/archive/archive-TASK-001.md`
+
+---
+
 ## 2026-04-30 — Phase 3: HTTP Layer & Health Endpoint — COMPLETE (TASK-001)
 
 ### What Was Built
