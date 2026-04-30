@@ -13,13 +13,15 @@
 
 | Task ID | Date | Learnings Extracted | Rules Amended | Rules Created |
 |---------|------|--------------------:|-------------:|-------------:|
-| (none yet) | | | | |
+| TASK-001 | 2026-04-30 | 4 | 0 | 3 |
 
 ## Rule Effectiveness
 
 | File | Topics | Evidence Count | Priority | Last Updated |
 |------|--------|---------------:|:--------:|:------------:|
-| (none yet) | | | | |
+| testing-patterns.md | testing, otel, observability | 2 | low | 2026-04-30 |
+| architecture.md | architecture, eslint, module-ownership | 1 | low | 2026-04-30 |
+| error-handling.md | error-handling, typescript | 1 | low | 2026-04-30 |
 
 ## Consolidation History
 
