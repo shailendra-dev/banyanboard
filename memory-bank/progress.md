@@ -66,3 +66,5 @@
 ### Security Notes
 - No new security debt introduced. Pino redact list is comprehensive (authorization, cookie, set-cookie, password, token, secret at root and nested paths).
 - OTel telemetry reads `OTEL_SDK_DISABLED` directly from `process.env` (intentional: must initialize before config validation).
+
+**Phase 2 Archive**: `memory-bank/archive/archive-TASK-001-phase2.md`
